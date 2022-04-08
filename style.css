@@ -1,0 +1,34 @@
+
+h1 {
+    color:purple;
+    font-family:fantasy;
+    font-style: italic;
+    font-weight: 100;
+}
+#logInBox {
+    margin: auto;
+    width: 300px;
+    padding: 10px;
+    border: 5px solid purple;
+    background-color: rgb(205, 245, 243);
+}
+h2 {
+    color: purple;
+    font-family:fantasy;
+    font-style: italic;
+    text-align: center;
+    font-weight: 100;
+}
+#logInButton {
+    position: relative;
+    left: 115px;
+}
+h3 {
+    color: purple;
+    font-family:fantasy;
+    font-style: italic;
+    font-weight: 100;
+    position: fixed;
+    right: 20px;
+    top: 15px;
+}
