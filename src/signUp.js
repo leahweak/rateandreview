@@ -1,9 +1,11 @@
 window.addEventListener("DOMContentLoaded", function () {
+    document.querySelector("#username").addEventListener("keydown", preventSpaces);
     document.querySelector("#password").addEventListener("keydown", preventSpaces);
     document.querySelector("#signUpButton").addEventListener("click",signUpHandler);
     document.querySelector("#password").addEventListener("keypress", (event) =>{
+        //add event listener when user hits enter
         if (event.charCode == 13) {
-            logInHandler();
+            signUpHandler();
          }
     });
 });
@@ -16,11 +18,5 @@ function preventSpaces(event) {
  }
 
 function signUpHandler() {
-    let username = document.querySelector("#username").value;
-    let password = document.querySelector("#password").value;
-    let params = new URLSearchParams();
-    params.append("username",username);
-    params.append("password",password);
-    document.location.href = "./home.html?"+ params.toString();
-    window.open(url);
+    /**Get username and password from user and store in users.json */
 }
