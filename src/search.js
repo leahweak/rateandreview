@@ -7,10 +7,11 @@ window.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-function searchHandler() {
+async function searchHandler() {
     document.querySelector("#showImages").innerHTML = "";
     let search = document.querySelector("#search").value;
-    fetchImages(search);
+    let showList = await fetchImages(search);
+    addImages(showList);
 }
 
 async function fetchImages(topic) {
@@ -19,6 +20,7 @@ async function fetchImages(topic) {
  
     if (response.ok) {
       let r = await response.json();
+      let showList = [];
         for (let c of r) {
             if(c.show.image != null){
                 let newImage = document.createElement("img");
@@ -31,8 +33,15 @@ async function fetchImages(topic) {
                     document.location.href = "./tvShow.html?"+ params.toString();
                     window.open(url);
                 });
-                document.querySelector("#showImages").appendChild(newImage);
+                showList.push(newImage);
             }
         }
+        return showList;
     } 
  }
+
+function addImages(array) {
+    for (image of array) {
+        document.querySelector("#showImages").appendChild(image);
+    }
+}

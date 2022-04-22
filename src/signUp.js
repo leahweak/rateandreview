@@ -18,5 +18,15 @@ function preventSpaces(event) {
  }
 
 function signUpHandler() {
-    /**Get username and password from user and store in users.json */
+    let username = document.querySelector("#username").value;
+    let password = document.querySelector("#password").value;
+    if(localStorage.getItem(username)) {
+        alert("Username already exists!");
+    } else{
+        localStorage.setItem(username,password);
+        let params = new URLSearchParams();
+        params.append("username",username);
+        document.location.href = "./home.html?"+ params.toString();
+        window.open(url);
+    }
 }

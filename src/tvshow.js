@@ -1,10 +1,10 @@
 window.addEventListener("DOMContentLoaded", function () {
-    updateTVPage();
-    saveReview();
+    let params = new URLSearchParams(window.location.search), tvID = params.get("tvID"),
+    username = params.get("username");
+    updateTVPage(username, tvID);
 });
 
- async function updateTVPage() {
-    let params = new URLSearchParams(window.location.search),tvID = params.get("tvID");
+ async function updateTVPage(username, tvID) {
     url = "https://api.tvmaze.com/shows/"+tvID+"?";
     let response = await fetch(url);
      if(response.ok) {
@@ -13,3 +13,4 @@ window.addEventListener("DOMContentLoaded", function () {
          document.querySelector("#showName").innerHTML = r.name;
      }
  }
+

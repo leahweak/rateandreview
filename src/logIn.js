@@ -18,9 +18,20 @@ function preventSpaces(event) {
 
 function logInHandler() {
     let username = document.querySelector("#username").value;
-    let params = new URLSearchParams();
-    params.append("username",username);
-    document.location.href = "./home.html?"+ params.toString();
-    window.open(url);
+    let password = document.querySelector("#password").value;
+    if(localStorage.getItem(username)) {
+        let check = localStorage.getItem(username,password);
+        if(check == password) {
+            let params = new URLSearchParams();
+            params.append("username",username);
+            document.location.href = "./home.html?"+ params.toString();
+            window.open(url);
+        } else {
+            alert("Password is incorrect.");
+        }
+    } else {
+        alert("Username doesn't exist.");
+    }
+
    
 }
