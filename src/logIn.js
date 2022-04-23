@@ -20,8 +20,8 @@ function logInHandler() {
     let username = document.querySelector("#username").value;
     let password = document.querySelector("#password").value;
     if(localStorage.getItem(username)) {
-        let check = localStorage.getItem(username,password);
-        if(check == password) {
+        let account = JSON.parse(localStorage.getItem(username)); 
+        if(password == account.password) {
             let params = new URLSearchParams();
             params.append("username",username);
             document.location.href = "./home.html?"+ params.toString();

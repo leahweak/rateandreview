@@ -23,7 +23,8 @@ function signUpHandler() {
     if(localStorage.getItem(username)) {
         alert("Username already exists!");
     } else{
-        localStorage.setItem(username,password);
+        let account = {password: password};
+        localStorage.setItem(username,JSON.stringify(account));
         let params = new URLSearchParams();
         params.append("username",username);
         document.location.href = "./home.html?"+ params.toString();
