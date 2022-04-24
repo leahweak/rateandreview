@@ -34,6 +34,7 @@ h3 {
     font-family:fantasy;
     font-style: italic;
     font-weight: 100;
+    text-align: center;
 }
 
 .blue {
@@ -74,8 +75,24 @@ h3 {
     border-left: 5px solid purple;
     border-right: 5px solid purple;
 }
-
+/*
 #profile > div {
     text-align: left;
+}
+*/
+#profInfo {
+    text-align: left;
+}
+
+#profileName {
+    text-align: left
+}
+
+#upload {
+    grid-column: 1 / 3;
+}
+
+#options {
+    grid-column: 1 / 3;
 }
 
