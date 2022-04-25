@@ -7,21 +7,25 @@
 
 <body id="basicLayout">
     <div class="blue">
-        <a href="./home.html"><h1>TVrater</h1></a>
+        <h1>TVrater</h1>
     </div>
     <div class="blue">
-        <h3>Log Out</h3>
+        <a href="./logIn.html"><h3>Log Out</h3></a>
     </div>
     <div id="basic">
-        <img id="tvImage" src="gray.jpg" alt="TV Show Image" height=200>
+        <img id="tvImage" alt="TV Show Image" height=200>
         <h2 id="showName">TV Show</h2>
         <p>Rating:</p>
         <p>
-        <label for="review">Review:</label>
+            <span id="star1" class="stars">&starf;</span>
+            <span id="star2" class="stars">&starf;</span>
+            <span id="star3" class="stars">&starf;</span>
+            <span id="star4" class="stars">&starf;</span>
+            <span id="star5" class="stars">&starf;</span>
         </p>
-        <textarea name="review" id="review" rows="4" cols="50"></textarea>
-        <input type="button" id="reviewButton" value="Save">
-        <div></div>
+        <p>Review:</p>
+        <p id="review"></p>
+        <input type="button" id="edit" value="Edit">
     </div>
     <script src="tvshow.js"></script>
 </body>

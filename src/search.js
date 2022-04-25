@@ -5,6 +5,11 @@ window.addEventListener("DOMContentLoaded", function () {
             searchHandler();
          }
     });
+    let params = new URLSearchParams(window.location.search),username = params.get("username");
+    document.querySelector("h1").addEventListener("click", () => {
+        document.location.href = "./home.html?"+ params.toString();
+        window.open(url);
+    });
 });
 
 async function searchHandler() {

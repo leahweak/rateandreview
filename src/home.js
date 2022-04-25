@@ -1,7 +1,12 @@
 window.addEventListener("DOMContentLoaded", function () {
+    let params = new URLSearchParams(window.location.search),username = params.get("username");
     setUpPage();
     document.querySelector("#toSearch").addEventListener("click", goToSearch);
     document.querySelector("#editProfile").addEventListener("click", editProfile);
+    document.querySelector("h1").addEventListener("click", () => {
+        document.location.href = "./home.html?"+ params.toString();
+        window.open(url);
+    });
 });
 
 function setUpPage() {
@@ -50,8 +55,6 @@ function changeBio() {
     let bio = document.querySelector("#biography").innerHTML;
     document.querySelector("#biography").innerHTML = "";
     let editBio = document.createElement("textarea");
-    editBio.name = "bio";
-    editBio.id = "bio";
     editBio.rows = "3";
     editBio.cols = "50";
     editBio.maxLength = "100";
