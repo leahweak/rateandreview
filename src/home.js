@@ -11,7 +11,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
 function setUpPage() {
     let params = new URLSearchParams(window.location.search),username = params.get("username");
-    document.querySelector("#profileName").innerHTML = username;
+    document.querySelector("#name").innerHTML = username;
     let account = JSON.parse(localStorage.getItem(username));
     if(account.hasOwnProperty("bio")) {
         document.querySelector("#biography").innerHTML = account.bio;
@@ -83,3 +83,4 @@ function changePic() {
     document.querySelector("#upload").appendChild(label);
     document.querySelector("#upload").appendChild(upload);
 }
+
