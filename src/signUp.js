@@ -23,7 +23,10 @@ function signUpHandler() {
     if(localStorage.getItem(username)) {
         alert("Username already exists!");
     } else{
-        let account = {password: password};
+        let account = {
+            password: password,
+            lists: {"Want to Watch": [], "Currently Watching": [], "Finished Watching": []}
+        };
         localStorage.setItem(username,JSON.stringify(account));
         let params = new URLSearchParams();
         params.append("username",username);

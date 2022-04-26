@@ -7,6 +7,7 @@ window.addEventListener("DOMContentLoaded", function () {
         document.location.href = "./home.html?"+ params.toString();
         window.open(url);
     });
+    document.querySelector("li").addEventListener("click", goToList);
 });
 
 function setUpPage() {
@@ -82,5 +83,12 @@ function changePic() {
 
     document.querySelector("#upload").appendChild(label);
     document.querySelector("#upload").appendChild(upload);
+}
+
+function goToList() {
+    let params = new URLSearchParams(window.location.search);
+    params.append("list","Want to Watch");
+    document.location.href = "./list.html?"+ params.toString();
+    window.open(url);
 }
 
