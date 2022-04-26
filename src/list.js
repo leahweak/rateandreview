@@ -9,6 +9,7 @@ window.addEventListener("DOMContentLoaded", function () {
         window.open(url);
     });
     document.querySelector("#editList").addEventListener("click", search);
+    document.querySelector("#delete").addEventListener("click", deleteList);
 });
 
 function setUpPage() {
@@ -22,17 +23,59 @@ function setUpPage() {
     if(account.hasOwnProperty("img")) {
         document.querySelector("#profileImg").src = account.img;
     } 
-    if(account.lists.hasOwnProperty("Want to Watch") && account.lists["Want to Watch"]!=[]) {
-        for (show of account.lists["Want to Watch"]) {
+    if(account.lists.hasOwnProperty(lName) && account.lists[lName]!=[]) {
+        for (show of account.lists[lName]) {
             let image = document.createElement("img");
             image.src = show.showImg;
             image.height = 150;
             document.querySelector("#showList").appendChild(image);
         }
     }
+
+    for(item in account.lists) {
+        let lst = document.createElement("li");
+        lst.innerHTML = item;
+        lst.addEventListener("click", ()=> {
+            params.set("list", lst.innerHTML);
+            document.location.href = "./list.html?" + params.toString();
+            window.open(url);
+        })
+        document.querySelector("ul").appendChild(lst);
+    }
+
+    document.querySelector("#addList").addEventListener("click", addNewList);
+}
+
+function addNewList() {
+    let params = new URLSearchParams(window.location.search), username = params.get("username");
+    let createName = document.createElement("input");
+    createName.type = "text";
+    document.querySelector("#addList").value = "Save";
+    document.querySelector("#addList").addEventListener("click", ()=> {
+        let account = JSON.parse(localStorage.getItem(username));
+        account.lists[createName.value] = [];
+        localStorage.setItem(username,JSON.stringify(account));
+        document.location.href = "./list.html?" + params.toString();
+        window.open(url);
+    });
+    
+    document.querySelector("ul").appendChild(createName);
+}
+
+function deleteList() {
+    let params = new URLSearchParams(window.location.search), username = params.get("username")
+    ,lName = params.get("list");
+    let account = JSON.parse(localStorage.getItem(username));
+    delete account.lists[lName];
+    localStorage.setItem(username,JSON.stringify(account));
+    let p = new URLSearchParams();
+    p.append("username",username);
+    document.location.href = "./home.html?"+ p.toString();
+    window.open(url);
 }
 
 function goToSearch() {
+    let params = new URLSearchParams(window.location.search), username = params.get("username");
     let p = new URLSearchParams();
     p.append("username",username);
     document.location.href = "./search.html?"+ p.toString();
@@ -59,7 +102,8 @@ async function searchHandler() {
 }
 
 async function fetchImages(topic) {
-    let params = new URLSearchParams(window.location.search),username = params.get("username");
+    let params = new URLSearchParams(window.location.search),username = params.get("username")
+    ,lName = params.get("list");
     let url = "https://api.tvmaze.com/search/shows?q=" + topic;
     let response = await fetch(url);
  
@@ -73,10 +117,10 @@ async function fetchImages(topic) {
                 newImage.src = c.show.image.medium;
                 newImage.height = 150;
                 let tvID = c.show.id;
-                newImage.addEventListener("click",function () {
+                newImage.addEventListener("click",() => {
                     let addShow = {id: tvID, showImg: newImage.src};
                     let account = JSON.parse(localStorage.getItem(username));
-                    account["lists"]["Want to Watch"].push(addShow);
+                    account["lists"][lName].push(addShow);
                     localStorage.setItem(username,JSON.stringify(account));
                 });
                 showList.push(newImage);

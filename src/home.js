@@ -7,7 +7,6 @@ window.addEventListener("DOMContentLoaded", function () {
         document.location.href = "./home.html?"+ params.toString();
         window.open(url);
     });
-    document.querySelector("li").addEventListener("click", goToList);
 });
 
 function setUpPage() {
@@ -20,6 +19,32 @@ function setUpPage() {
     if(account.hasOwnProperty("img")) {
         document.querySelector("#profileImg").src = account.img;
     } 
+
+    for(item in account.lists) {
+        let lst = document.createElement("li");
+        lst.innerHTML = item;
+        lst.addEventListener("click", ()=> {
+            params.append("list", lst.innerHTML);
+            document.location.href = "./list.html?" + params.toString();
+            window.open(url);
+        })
+        document.querySelector("ul").appendChild(lst);
+    }
+    document.querySelector("#addList").addEventListener("click", addNewList);
+}
+
+function addNewList() {
+    let params = new URLSearchParams(window.location.search), username = params.get("username");
+    let createName = document.createElement("input");
+    createName.type = "text";
+    document.querySelector("#addList").value = "Save";
+    document.querySelector("#addList").addEventListener("click", ()=> {
+        let account = JSON.parse(localStorage.getItem(username));
+        account.lists[createName.value] = [];
+        localStorage.setItem(username,JSON.stringify(account));
+        document.location.href = "./home.html?" + params.toString();
+        window.open(url);
+    });
 }
 
 function goToSearch() {
