@@ -110,3 +110,10 @@ h3 {
     border-left: 5px solid purple;
     border-right: 5px solid purple;
 }
+
+#popUp {
+    display: none;
+    position: fixed;
+    border: 3px solid purple;
+    background-color: rgb(205, 245, 243);
+}

@@ -31,6 +31,7 @@ async function fetchImages(topic) {
                 let newImage = document.createElement("img");
                 newImage.src = c.show.image.medium;
                 newImage.height = 150;
+
                 let tvID = c.show.id;
                 newImage.addEventListener("click",function () {
                     let params = new URLSearchParams(window.location.search);

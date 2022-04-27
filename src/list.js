@@ -17,17 +17,17 @@ function setUpPage() {
     , lName = params.get("list");
     document.querySelector("#listName").innerHTML = lName;
     let account = JSON.parse(localStorage.getItem(username));
-    if(account.hasOwnProperty("bio")) {
-        document.querySelector("#biography").innerHTML = account.bio;
-    }
-    if(account.hasOwnProperty("img")) {
-        document.querySelector("#profileImg").src = account.img;
-    } 
+
     if(account.lists.hasOwnProperty(lName) && account.lists[lName]!=[]) {
         for (show of account.lists[lName]) {
             let image = document.createElement("img");
             image.src = show.showImg;
             image.height = 150;
+            let tvID = show.id;
+            image.addEventListener("click", ()=> {
+                console.log(tvID);
+                options(username, lName, tvID);
+            });
             document.querySelector("#showList").appendChild(image);
         }
     }
@@ -134,4 +134,32 @@ async function fetchImages(topic) {
     for (image of array) {
         document.querySelector("#showList").appendChild(image);
     }
+}
+
+function options(username, lName, tvID) {
+    document.querySelector("#popUp").style.display = "block";
+    document.querySelector("#cancel").addEventListener("click", ()=> {
+        document.querySelector("#popUp").style.display = "none";
+    })
+
+    document.querySelector("#deleteShow").addEventListener("click", ()=> {
+        let account = JSON.parse(localStorage.getItem(username));
+        let size = account.lists[lName].length;
+        let d;
+        for (i=0; i<size; i++) {
+            console.log(tvID);
+            if(account.lists[lName][i].id == tvID) {
+                d = i;
+            }
+        }
+        account.lists[lName].splice(d,1);
+        localStorage.setItem(username,JSON.stringify(account));
+    });
+
+    document.querySelector("#toShowPage").addEventListener("click", ()=> {
+        let params = new URLSearchParams(window.location.search);
+        params.append("tvID",tvID);
+        document.location.href = "./tvShow.html?"+ params.toString();
+        window.open(url);
+    });
 }
