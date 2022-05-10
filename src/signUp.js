@@ -26,7 +26,9 @@ function signUpHandler() {
         let account = {
             password: password,
             type: "Private",
-            lists: {"Want to Watch": [], "Currently Watching": [], "Finished Watching": []}
+            img: "gray.jpg",
+            lists: {"Want to Watch": [], "Currently Watching": [], "Finished Watching": []},
+            friends: []
         };
         localStorage.setItem(username,JSON.stringify(account));
         let params = new URLSearchParams();

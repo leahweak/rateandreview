@@ -159,3 +159,22 @@ select {
     background-color: white;
     border: solid purple;
 }
+
+#showLayout {
+    display: grid;
+    grid-template-columns: 350px 150px auto;
+    grid-template-rows: 60px 525px;  
+}
+
+#showLayout > div {
+    border-top: 5px solid purple;
+    text-align: center;
+}
+
+#friendRev {
+    border-right: 5px solid purple;
+}
+
+.myRev {
+    padding: 20px;
+}

@@ -39,7 +39,9 @@ window.addEventListener("DOMContentLoaded", function () {
             let rating = account[tvID]["rating"];
             fillStars(rating);
         }
+        friendReviews();
     }
+
  }
 
 
@@ -70,7 +72,7 @@ window.addEventListener("DOMContentLoaded", function () {
     username = params.get("username");
     let newRev = changeReview();
 
-     document.querySelector("#edit").value = "Save";
+     document.querySelector("#edit").innerHTML = "Save";
      document.querySelector("#edit").addEventListener("click", () => {
         let account = JSON.parse(localStorage.getItem(username)); 
         if(!account.hasOwnProperty(tvID)){
@@ -113,4 +115,55 @@ window.addEventListener("DOMContentLoaded", function () {
          localStorage.setItem(username,JSON.stringify(account));
      })
  }
+
+ function friendReviews() {
+     let params = new URLSearchParams(window.location.search),username = params.get("username"), tvID=params.get("tvID");
+     let account = JSON.parse(localStorage.getItem(username));
+ 
+     for(i in account.friends) {
+             let user = account.friends[i];
+             let friendAccount = JSON.parse(localStorage.getItem(user));
+             let fRev = document.createElement("div");
+             let name = document.createElement("h3");
+             name.innerHTML = user;
+             name.addEventListener("click", ()=> {goToFriend(user)});
+             fRev.append(name);
+
+             if(friendAccount.hasOwnProperty(tvID)) {
+                let a = friendAccount[tvID];
+
+                if(a.hasOwnProperty("rating")) {
+                    let rating = friendAccount[tvID]["rating"];
+                    for(i=1; i<=rating; i++){
+                        let star = document.createElement("span");
+                        star.innerHTML = "&starf;";
+                        star.style.color = "purple";
+                        fRev.append(star);
+                    }
+                    for(i=5; i>rating; i--){
+                        let star = document.createElement("span");
+                        star.innerHTML = "&starf;";
+                        star.style.color = "rgb(205, 245, 243)";
+                        fRev.append(star);
+                    }
+                 
+                }
+                if(a.hasOwnProperty("review")) {
+                    let rev = document.createElement("p")
+                    rev.innerHTML = friendAccount[tvID]["review"];
+                    fRev.append(rev);
+                }
+        
+            }
+
+             document.querySelector("#friendRev").appendChild(fRev);
+     }
+ }
+
+ function goToFriend(friendName) {
+    let params = new URLSearchParams(window.location.search);
+    params.append("friend",friendName);
+    document.location.href = "./home.html?"+ params.toString();
+    window.open(url);
+}
 
