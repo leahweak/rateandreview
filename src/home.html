@@ -10,26 +10,30 @@
     <div class="blue"><h1>TVrater</h1></div>
     <div class="blue"><h3 id="toSearch">Search</h3></div>
     <div class="blue"><a href="./logIn.html"><h3>Log Out</h3></a></div>
-    <div ><h2>Friend Activity</h2></div>
+    <div>
+        <h2>Friends</h2>
+        <input type="text" id="search" placeholder="Search For Friends">
+        <button id="searchButton">Search</button>
+        <div id="friendAct"></div>
+    </div>
     <div id="profile">
         <div>
             <img id="profileImg" src="gray.jpg" alt="Profile Picture" width="100" height="100">
         </div>
         <div id="profInfo">
             <h2 id="name"></h2>
-            <p id="biography"></p>
+            <p id="accountType"></p>
+            <p id="biography"></p>  
         </div>
         <div id="upload"></div>
         <div></div>
         <div id="options">
-            <h3 id="editProfile">Edit Profile</h3>
+            <button id="editProfile">Edit Profile</button>
         </div>
     </div>
-    <div>
+    <div id="lists">
         <h2>Lists</h2>
-        <ul>
-        </ul>
-        <input id="addList" type="button" value="Add New List">
+        <ul></ul>
     </div>
     <script src="home.js"></script>  
 </body>

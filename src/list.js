@@ -50,7 +50,7 @@ function addNewList() {
     let params = new URLSearchParams(window.location.search), username = params.get("username");
     let createName = document.createElement("input");
     createName.type = "text";
-    document.querySelector("#addList").value = "Save";
+    document.querySelector("#addList").innerHTML = "Save";
     document.querySelector("#addList").addEventListener("click", ()=> {
         let account = JSON.parse(localStorage.getItem(username));
         account.lists[createName.value] = [];

@@ -25,6 +25,7 @@ function signUpHandler() {
     } else{
         let account = {
             password: password,
+            type: "Private",
             lists: {"Want to Watch": [], "Currently Watching": [], "Finished Watching": []}
         };
         localStorage.setItem(username,JSON.stringify(account));

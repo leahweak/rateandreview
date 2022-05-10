@@ -7,12 +7,27 @@ window.addEventListener("DOMContentLoaded", function () {
         document.location.href = "./home.html?"+ params.toString();
         window.open(url);
     });
+    document.querySelector("#searchButton").addEventListener("click",friendSearch);
 });
 
 function setUpPage() {
-    let params = new URLSearchParams(window.location.search),username = params.get("username");
+    let params = new URLSearchParams(window.location.search);
+    let username = "";
+    if(params.get("friend")){
+        username = params.get("friend")
+    } else {
+        username = params.get("username");
+        let addList = document.createElement("button");
+        addList.id = "addList";
+        addList.innerHTML = "Add New List";
+        addList.addEventListener("click", addNewList);
+        document.querySelector("#lists").appendChild(addList);
+    }
     document.querySelector("#name").innerHTML = username;
     let account = JSON.parse(localStorage.getItem(username));
+
+    document.querySelector("#accountType").innerHTML = account.type;
+    
     if(account.hasOwnProperty("bio")) {
         document.querySelector("#biography").innerHTML = account.bio;
     }
@@ -30,14 +45,13 @@ function setUpPage() {
         })
         document.querySelector("ul").appendChild(lst);
     }
-    document.querySelector("#addList").addEventListener("click", addNewList);
 }
 
 function addNewList() {
     let params = new URLSearchParams(window.location.search), username = params.get("username");
     let createName = document.createElement("input");
     createName.type = "text";
-    document.querySelector("#addList").value = "Save";
+    document.querySelector("#addList").innerHTML = "Save";
     document.querySelector("#addList").addEventListener("click", ()=> {
         let account = JSON.parse(localStorage.getItem(username));
         account.lists[createName.value] = [];
@@ -45,6 +59,7 @@ function addNewList() {
         document.location.href = "./home.html?" + params.toString();
         window.open(url);
     });
+    document.querySelector("ul").appendChild(createName);
 }
 
 function goToSearch() {
@@ -63,12 +78,39 @@ function editProfile() {
     });
     document.querySelector("#options").appendChild(exit);
 
+    let account = JSON.parse(localStorage.getItem(username));
+    let private = document.createElement("input");
+    private.type = "radio";
+    private.id = "private";
+    private.name = "choice";
+    let privL = document.createElement("label");
+    privL.innerHTML = "Private";
+    privL.for = "private";
+    let public = document.createElement("input");
+    public.type = "radio";
+    public.id = "public";
+    public.name = "choice";
+    let pubL = document.createElement("label");
+    pubL.innerHTML = "Public";
+    pubL.for = "public";
+
+    if(account.type == "Private") {
+        private.checked = true;
+    } else {public.checked = true;}
+    document.querySelector("#accountType").innerHTML = "";
+    document.querySelector("#accountType").appendChild(private);
+    document.querySelector("#accountType").appendChild(privL);
+    document.querySelector("#accountType").appendChild(public);
+    document.querySelector("#accountType").appendChild(pubL);
+
     let newBio = changeBio();
     changePic();
 
     document.querySelector("#editProfile").innerHTML = "Save";
     document.querySelector("#editProfile").addEventListener("click", () => {
         let account = JSON.parse(localStorage.getItem(username)); 
+        if(private.checked == true) {account.type = "Private";
+        } else {account.type = "Public";}
         account.bio = newBio.value;
         account.img = document.querySelector("#profileImg").src;
         localStorage.setItem(username,JSON.stringify(account));
@@ -114,6 +156,50 @@ function goToList() {
     let params = new URLSearchParams(window.location.search);
     params.append("list","Want to Watch");
     document.location.href = "./list.html?"+ params.toString();
+    window.open(url);
+}
+
+function friendSearch() {
+    document.querySelector("#friendAct").innerHTML = "";
+    let query = document.querySelector("#search").value;
+    let params = new URLSearchParams(window.location.search),username = params.get("username");
+
+    for(let i=0; i<localStorage.length; i++) {
+        let user = localStorage.key(i);
+        if(user != username && user.includes(query)) {
+            let account = JSON.parse(localStorage.getItem(user));
+            let info = document.createElement("div");
+            info.style = "display: grid; grid-template-columns: 80px auto; margin: 25px; vertical-align: middle;";
+            let photo = document.createElement("img");
+            photo.src = account.img;
+            photo.width = "60";
+            photo.height = "60";
+            photo.addEventListener("click", ()=> {goToFriend(user)});
+            info.appendChild(document.createElement("div").appendChild(photo));
+            let nameDiv = document.createElement("div");
+            let name = document.createElement("h3");
+            name.innerHTML = user;
+            name.style = "text-align: left;";
+            name.addEventListener("click", ()=> {goToFriend(user)});
+            nameDiv.appendChild(name);
+            info.appendChild(nameDiv);
+            document.querySelector("#friendAct").appendChild(info);
+        }
+    }
+    let cancel = document.createElement("button");
+    cancel.innerHTML = "Cancel";
+    cancel.addEventListener("click", () => {
+        document.location.href = "./home.html?"+ params.toString();
+        window.open(url);
+    });
+    document.querySelector("#friendAct").appendChild(cancel);
+
+}
+
+function goToFriend(friendName) {
+    let params = new URLSearchParams(window.location.search);
+    params.append("friend",friendName);
+    document.location.href = "./home.html?"+ params.toString();
     window.open(url);
 }
 
