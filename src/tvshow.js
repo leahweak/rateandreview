@@ -1,24 +1,48 @@
 window.addEventListener("DOMContentLoaded", function () {
     let params = new URLSearchParams(window.location.search), tvID = params.get("tvID"),
     username = params.get("username");
-    document.querySelector("#user").innerHTML = username;
     createTVPage(username, tvID);
-    document.querySelector("h1").addEventListener("click", () => {
-        let p = new URLSearchParams();
-        p.append("username",username);
-        document.location.href = "./home.html?"+ p.toString();
-        window.open(url);
-    });
-    document.querySelector("#edit").addEventListener("click", update);
+    friendReviews();
+    document.querySelector("#user").innerHTML = username;
+    document.querySelector("#user").addEventListener("click", goHome);
+    document.querySelector("h1").addEventListener("click", goHome);
+    document.querySelector("#toSearch").addEventListener("click", goToSearch);
+
+    document.querySelector("#edit").addEventListener("click", editReview);
     document.querySelector("#star1").addEventListener("click", () => stars(1));
     document.querySelector("#star2").addEventListener("click", () => stars(2));
     document.querySelector("#star3").addEventListener("click", () => stars(3));
     document.querySelector("#star4").addEventListener("click", () => stars(4));
     document.querySelector("#star5").addEventListener("click", () => stars(5));
-
-    document.querySelector("#toSearch").addEventListener("click", goToSearch);
 });
 
+/* Take the user to their home page, keeping their username stored in the url. */
+function goHome() {
+    let params = new URLSearchParams(window.location.search);
+    params.delete("tvID");
+    document.location.href = "./home.html?"+ params.toString();
+    window.open(url);
+}
+
+/* Go to search page only keeping username in url for future use. */
+function goToSearch() {
+    let params = new URLSearchParams(window.location.search);
+    params.delete("tvID");
+    document.location.href = "./search.html?"+ params.toString()
+    window.open(url);
+}
+
+/* Go to friendName's profile */
+function goToFriend(friendName) {
+    let params = new URLSearchParams(window.location.search);
+    params.delete("tvID");
+    params.append("friend",friendName);
+    document.location.href = "./home.html?"+ params.toString();
+    window.open(url);
+}
+
+/* Display correct image by searching the tv maze api using tvID 
+and display rating and review if they exist for user.*/
  async function createTVPage(username, tvID) {
     url = "https://api.tvmaze.com/shows/"+tvID+"?";
     let response = await fetch(url);
@@ -41,16 +65,17 @@ window.addEventListener("DOMContentLoaded", function () {
             let rating = account[tvID]["rating"];
             fillStars(rating);
         }
-        friendReviews();
     }
 
  }
 
-
+ /* This function is triggered when the user clicks on a star. From their
+ the function updates the rating on the page and in local storage. */
  function stars(star) {
     fillStars(star);
 
-    let params = new URLSearchParams(window.location.search), tvID = params.get("tvID"),
+    let params = new URLSearchParams(window.location.search);
+    let tvID = params.get("tvID"),
     username = params.get("username");
     let account = JSON.parse(localStorage.getItem(username));
     if(!account.hasOwnProperty(tvID)){
@@ -60,16 +85,19 @@ window.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem(username,JSON.stringify(account));
  }
 
+ /* Fill stars in as specified by parameter number. */
  function fillStars(number) {
     for(i=1; i<=number; i++){
-        document.querySelector("#star"+i).style.color = "purple";
+        document.querySelector("#star"+i).style.color = "rgb(99, 23, 99)";
     }
     for(i=5; i>number; i--){
         document.querySelector("#star"+i).style.color = "rgb(205, 245, 243)";
     }
  }
 
- function update() {
+ /* This function is called when the user clicks on the edit button. The user
+ is then able to change their review and save, updating local storage. */
+ function editReview() {
     let params = new URLSearchParams(window.location.search), tvID = params.get("tvID"),
     username = params.get("username");
     let newRev = changeReview();
@@ -87,6 +115,7 @@ window.addEventListener("DOMContentLoaded", function () {
      })
  }
 
+/* Create text box where user can update their review. */
  function changeReview() {
     let rev = document.querySelector("#review").innerHTML;
     document.querySelector("#review").innerHTML = "";
@@ -99,9 +128,13 @@ window.addEventListener("DOMContentLoaded", function () {
     return changeRev;
  }
 
+ /* This function allows the user to add the tv show to one of their lists.
+ If the tv show is already in a list, it is not listed as an option in the
+ dropdown menu. */
  function addToList(image) {
-    let params = new URLSearchParams(window.location.search), tvID = params.get("tvID"),
-    username = params.get("username");
+    let params = new URLSearchParams(window.location.search);
+    let tvID = params.get("tvID");
+    let username = params.get("username");
 
      let account = JSON.parse(localStorage.getItem(username));
      for(item in account.lists) {
@@ -111,6 +144,7 @@ window.addEventListener("DOMContentLoaded", function () {
                 alreadyIn = true;
             }
         }
+        // If show is already in list, don't show as option
          if(alreadyIn == false){
             let opt = document.createElement("option");
             opt.value = item;
@@ -118,6 +152,7 @@ window.addEventListener("DOMContentLoaded", function () {
             document.querySelector("select").appendChild(opt);
          }
      }
+     // When user clicks add, the tv show is saved to the selected list in local storage.
      document.querySelector("#add").addEventListener("click", ()=> {
         let addShow = {id: tvID, showImg: image};
         let account = JSON.parse(localStorage.getItem(username));
@@ -128,8 +163,11 @@ window.addEventListener("DOMContentLoaded", function () {
      });
  }
 
+/* Show ratings/reviews by friends of user if they exist. */
  function friendReviews() {
-     let params = new URLSearchParams(window.location.search),username = params.get("username"), tvID=params.get("tvID");
+     let params = new URLSearchParams(window.location.search);
+     let username = params.get("username");
+     let tvID = params.get("tvID");
      let account = JSON.parse(localStorage.getItem(username));
  
      for(i in account.friends) {
@@ -149,13 +187,7 @@ window.addEventListener("DOMContentLoaded", function () {
                     for(i=1; i<=rating; i++){
                         let star = document.createElement("span");
                         star.innerHTML = "&starf;";
-                        star.style.color = "purple";
-                        fRev.append(star);
-                    }
-                    for(i=5; i>rating; i--){
-                        let star = document.createElement("span");
-                        star.innerHTML = "&starf;";
-                        star.style.color = "rgb(205, 245, 243)";
+                        star.style.color = "rgb(99, 23, 99)";
                         fRev.append(star);
                     }
                  
@@ -172,17 +204,4 @@ window.addEventListener("DOMContentLoaded", function () {
      }
  }
 
- function goToFriend(friendName) {
-    let params = new URLSearchParams(window.location.search);
-    params.append("friend",friendName);
-    document.location.href = "./home.html?"+ params.toString();
-    window.open(url);
-}
-
-function goToSearch() {
-    let params = new URLSearchParams(window.location.search);
-    params.delete("tvID");
-    document.location.href = "./search.html?"+ params.toString()
-    window.open(url);
-}
 

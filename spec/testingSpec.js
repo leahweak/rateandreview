@@ -21,7 +21,7 @@ describe("validate inputs", () => {
 describe("check search output", () => {
 
 
-    it("check return", async () => {
+    it("has correct return value", async () => {
         let map = await fetchImages("");
         expect(map.size).toBe(0);
         map = await fetchImages("ashlee");
