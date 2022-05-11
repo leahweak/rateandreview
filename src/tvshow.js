@@ -1,6 +1,7 @@
 window.addEventListener("DOMContentLoaded", function () {
     let params = new URLSearchParams(window.location.search), tvID = params.get("tvID"),
     username = params.get("username");
+    document.querySelector("#user").innerHTML = username;
     createTVPage(username, tvID);
     document.querySelector("h1").addEventListener("click", () => {
         let p = new URLSearchParams();
@@ -15,6 +16,7 @@ window.addEventListener("DOMContentLoaded", function () {
     document.querySelector("#star4").addEventListener("click", () => stars(4));
     document.querySelector("#star5").addEventListener("click", () => stars(5));
 
+    document.querySelector("#toSearch").addEventListener("click", goToSearch);
 });
 
  async function createTVPage(username, tvID) {
@@ -103,17 +105,27 @@ window.addEventListener("DOMContentLoaded", function () {
 
      let account = JSON.parse(localStorage.getItem(username));
      for(item in account.lists) {
-         let opt = document.createElement("option");
-         opt.value = item;
-         opt.innerHTML = item;
-         document.querySelector("select").appendChild(opt);
+        let alreadyIn = false;
+        for(i in account["lists"][item]){
+            if(account["lists"][item][i].id == tvID){
+                alreadyIn = true;
+            }
+        }
+         if(alreadyIn == false){
+            let opt = document.createElement("option");
+            opt.value = item;
+            opt.innerHTML = item;
+            document.querySelector("select").appendChild(opt);
+         }
      }
      document.querySelector("#add").addEventListener("click", ()=> {
         let addShow = {id: tvID, showImg: image};
         let account = JSON.parse(localStorage.getItem(username));
-         account.lists[document.querySelector("select").value].push(addShow);
-         localStorage.setItem(username,JSON.stringify(account));
-     })
+        account.lists[document.querySelector("select").value].push(addShow);
+        localStorage.setItem(username,JSON.stringify(account));
+        document.location.href = "./tvshow.html?"+ params.toString();
+        window.open(url);
+     });
  }
 
  function friendReviews() {
@@ -124,12 +136,12 @@ window.addEventListener("DOMContentLoaded", function () {
              let user = account.friends[i];
              let friendAccount = JSON.parse(localStorage.getItem(user));
              let fRev = document.createElement("div");
-             let name = document.createElement("h3");
+             let name = document.createElement("h4");
              name.innerHTML = user;
              name.addEventListener("click", ()=> {goToFriend(user)});
-             fRev.append(name);
 
              if(friendAccount.hasOwnProperty(tvID)) {
+                fRev.append(name);
                 let a = friendAccount[tvID];
 
                 if(a.hasOwnProperty("rating")) {
@@ -164,6 +176,13 @@ window.addEventListener("DOMContentLoaded", function () {
     let params = new URLSearchParams(window.location.search);
     params.append("friend",friendName);
     document.location.href = "./home.html?"+ params.toString();
+    window.open(url);
+}
+
+function goToSearch() {
+    let params = new URLSearchParams(window.location.search);
+    params.delete("tvID");
+    document.location.href = "./search.html?"+ params.toString()
     window.open(url);
 }
 

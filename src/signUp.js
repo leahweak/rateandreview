@@ -25,7 +25,6 @@ function signUpHandler() {
     } else{
         let account = {
             password: password,
-            type: "Private",
             img: "gray.jpg",
             lists: {"Want to Watch": [], "Currently Watching": [], "Finished Watching": []},
             friends: []

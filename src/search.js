@@ -6,6 +6,7 @@ window.addEventListener("DOMContentLoaded", function () {
          }
     });
     let params = new URLSearchParams(window.location.search),username = params.get("username");
+    document.querySelector("#user").innerHTML = username;
     document.querySelector("h1").addEventListener("click", () => {
         document.location.href = "./home.html?"+ params.toString();
         window.open(url);

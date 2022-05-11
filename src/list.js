@@ -1,5 +1,6 @@
 window.addEventListener("DOMContentLoaded", function () {
     let params = new URLSearchParams(window.location.search),username = params.get("username");
+    document.querySelector("#user").innerHTML = username;
     setUpPage();
     document.querySelector("#toSearch").addEventListener("click", goToSearch);
     document.querySelector("h1").addEventListener("click", () => {
@@ -15,7 +16,6 @@ window.addEventListener("DOMContentLoaded", function () {
 function setUpPage() {
     let params = new URLSearchParams(window.location.search),username = params.get("username")
     , lName = params.get("list");
-    document.querySelector("#listName").innerHTML = lName;
     let account = JSON.parse(localStorage.getItem(username));
 
     if(account.lists.hasOwnProperty(lName) && account.lists[lName]!=[]) {
@@ -43,8 +43,11 @@ function setUpPage() {
         document.querySelector("ul").appendChild(lst);
     }
     if(params.get("friend")){
-
+        document.querySelector("#listName").innerHTML = params.get("friend")+"'s List: "+lName;
+        document.querySelector("#listsTitle").innerHTML = params.get("friend")+"'s Lists";
     } else {
+        document.querySelector("#listName").innerHTML = lName;
+
         let addList = document.createElement("button");
         addList.id = "addList";
         addList.innerHTML = "Add New List";
@@ -132,25 +135,37 @@ async function fetchImages(topic) {
       let r = await response.json();
         for (let c of r) {
             if(c.show.image != null){
-                let newImage = document.createElement("img");
-                newImage.src = c.show.image.medium;
-                newImage.height = 150;
+                let account = JSON.parse(localStorage.getItem(username));
                 let tvID = c.show.id;
-                newImage.addEventListener("click",() => {
-                    let addShow = {id: tvID, showImg: newImage.src};
-                    let account = JSON.parse(localStorage.getItem(username));
-                    account["lists"][lName].push(addShow);
-                    localStorage.setItem(username,JSON.stringify(account));
-                });
-                showList.push(newImage);
+                let alreadyIn = false;
+                for(i in account["lists"][lName]){
+                    if(account["lists"][lName][i].id == tvID){
+                        alreadyIn = true;
+                    }
+                }
+                if(alreadyIn == false){
+                    let newImage = document.createElement("img");
+                    newImage.src = c.show.image.medium;
+                    newImage.height = 150;
+                    newImage.addEventListener("click", function addToList() {
+                        let addShow = {id: tvID, showImg: newImage.src};
+                        account["lists"][lName].push(addShow);
+                        localStorage.setItem(username,JSON.stringify(account));
+    
+                        newImage.style = "filter: blur(8px);";
+                        newImage.removeEventListener("click", addToList);
+                    });
+                    showList.push(newImage);
+                }
             }
         }
-    } 
+    }
+    
     return showList;
  }
 
+
  function addImages(array) {
-    console.log(array)
     for (image of array) {
         document.querySelector("#showList").appendChild(image);
     }
@@ -194,7 +209,7 @@ function friendSearch() {
         if(user != username && user.includes(query)) {
             let account = JSON.parse(localStorage.getItem(user));
             let info = document.createElement("div");
-            info.style = "display: grid; grid-template-columns: 80px auto; margin: 25px; vertical-align: middle;";
+            info.style = "display: grid; grid-template-columns: 80px auto; margin-left: 45px; margin-top: 25px";
             let photo = document.createElement("img");
             photo.src = account.img;
             photo.width = "60";
@@ -202,7 +217,7 @@ function friendSearch() {
             photo.addEventListener("click", ()=> {goToFriend(user)});
             info.appendChild(document.createElement("div").appendChild(photo));
             let nameDiv = document.createElement("div");
-            let name = document.createElement("h3");
+            let name = document.createElement("h4");
             name.innerHTML = user;
             name.style = "text-align: left;";
             name.addEventListener("click", ()=> {goToFriend(user)});
@@ -255,7 +270,7 @@ function printFriends() {
             let user = account.friends[i];
             let friendAccount = JSON.parse(localStorage.getItem(user));
             let info = document.createElement("div");
-            info.style = "display: grid; grid-template-columns: 80px auto; margin: 25px; vertical-align: middle;";
+            info.style = "display: grid; grid-template-columns: 80px auto; margin-left: 45px; margin-top: 25px";
             let photo = document.createElement("img");
             photo.src = friendAccount.img;
             photo.width = "60";
@@ -263,7 +278,7 @@ function printFriends() {
             photo.addEventListener("click", ()=> {goToFriend(user)});
             info.appendChild(document.createElement("div").appendChild(photo));
             let nameDiv = document.createElement("div");
-            let name = document.createElement("h3");
+            let name = document.createElement("h4");
             name.innerHTML = user;
             name.style = "text-align: left;";
             name.addEventListener("click", ()=> {goToFriend(user)});

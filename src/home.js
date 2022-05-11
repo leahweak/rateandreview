@@ -1,5 +1,6 @@
 window.addEventListener("DOMContentLoaded", function () {
     let params = new URLSearchParams(window.location.search), username = params.get("username");
+    document.querySelector("#user").innerHTML = username;
     setUpPage();
     document.querySelector("#toSearch").addEventListener("click", goToSearch);
     document.querySelector("h1").addEventListener("click", () => {
@@ -42,8 +43,6 @@ function setUpPage() {
     }
     document.querySelector("#name").innerHTML = username;
     let account = JSON.parse(localStorage.getItem(username));
-
-    document.querySelector("#accountType").innerHTML = account.type;
     
     if(account.hasOwnProperty("bio")) {
         document.querySelector("#biography").innerHTML = account.bio;
@@ -87,7 +86,7 @@ function goToSearch() {
 
 function editProfile() {
     let params = new URLSearchParams(window.location.search),username = params.get("username");
-    let exit = document.createElement("h3");
+    let exit = document.createElement("button");
     exit.innerHTML = "Don't Save";
     exit.addEventListener("click", () => {
         document.location.href = "./home.html?"+ params.toString();
@@ -95,30 +94,6 @@ function editProfile() {
     });
     document.querySelector("#options").appendChild(exit);
 
-    let account = JSON.parse(localStorage.getItem(username));
-    let private = document.createElement("input");
-    private.type = "radio";
-    private.id = "private";
-    private.name = "choice";
-    let privL = document.createElement("label");
-    privL.innerHTML = "Private";
-    privL.for = "private";
-    let public = document.createElement("input");
-    public.type = "radio";
-    public.id = "public";
-    public.name = "choice";
-    let pubL = document.createElement("label");
-    pubL.innerHTML = "Public";
-    pubL.for = "public";
-
-    if(account.type == "Private") {
-        private.checked = true;
-    } else {public.checked = true;}
-    document.querySelector("#accountType").innerHTML = "";
-    document.querySelector("#accountType").appendChild(private);
-    document.querySelector("#accountType").appendChild(privL);
-    document.querySelector("#accountType").appendChild(public);
-    document.querySelector("#accountType").appendChild(pubL);
 
     let newBio = changeBio();
     changePic();
@@ -126,8 +101,6 @@ function editProfile() {
     document.querySelector("#editProfile").innerHTML = "Save";
     document.querySelector("#editProfile").addEventListener("click", () => {
         let account = JSON.parse(localStorage.getItem(username)); 
-        if(private.checked == true) {account.type = "Private";
-        } else {account.type = "Public";}
         account.bio = newBio.value;
         account.img = document.querySelector("#profileImg").src;
         localStorage.setItem(username,JSON.stringify(account));
@@ -186,7 +159,7 @@ function friendSearch() {
         if(user != username && user.includes(query)) {
             let account = JSON.parse(localStorage.getItem(user));
             let info = document.createElement("div");
-            info.style = "display: grid; grid-template-columns: 80px auto; margin: 25px; vertical-align: middle;";
+            info.style = "display: grid; grid-template-columns: 80px auto; margin-left: 45px; margin-top: 25px";
             let photo = document.createElement("img");
             photo.src = account.img;
             photo.width = "60";
@@ -194,7 +167,7 @@ function friendSearch() {
             photo.addEventListener("click", ()=> {goToFriend(user)});
             info.appendChild(document.createElement("div").appendChild(photo));
             let nameDiv = document.createElement("div");
-            let name = document.createElement("h3");
+            let name = document.createElement("h4");
             name.innerHTML = user;
             name.style = "text-align: left;";
             name.addEventListener("click", ()=> {goToFriend(user)});
@@ -246,7 +219,7 @@ function printFriends() {
             let user = account.friends[i];
             let friendAccount = JSON.parse(localStorage.getItem(user));
             let info = document.createElement("div");
-            info.style = "display: grid; grid-template-columns: 80px auto; margin: 25px; vertical-align: middle;";
+            info.style = "display: grid; grid-template-columns: 80px auto; margin-left: 45px; margin-top: 25px";
             let photo = document.createElement("img");
             photo.src = friendAccount.img;
             photo.width = "60";
@@ -254,7 +227,7 @@ function printFriends() {
             photo.addEventListener("click", ()=> {goToFriend(user)});
             info.appendChild(document.createElement("div").appendChild(photo));
             let nameDiv = document.createElement("div");
-            let name = document.createElement("h3");
+            let name = document.createElement("h4");
             name.innerHTML = user;
             name.style = "text-align: left;";
             name.addEventListener("click", ()=> {goToFriend(user)});

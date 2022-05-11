@@ -6,14 +6,13 @@
 </head>
 
 <body id="showLayout">
-    <div class="blue">
-        <h1>TVrater</h1>
+    <div class="header">
+        <div><h1>TVrater</h1></div>
+        <div><h3 id="toSearch">Search</h3></div>
+        <div><h3 id="user"></h3></div>
+        <div><a href="./logIn.html"><h3>Log Out</h3></a></div>
     </div>
-    <div class="blue"><h3 id="toSearch">Search</h3></div>
-    <div class="blue">
-        <a href="./logIn.html"><h3>Log Out</h3></a>
-    </div>
-    <div id="friendRev">
+    <div id="friendRev" class="color">
         <h2>Friend Reviews</h2>
     </div>
     <div class="myRev">
@@ -21,7 +20,7 @@
     </div>
     <div class="myRev">
         <h2 id="showName">TV Show</h2>
-        <p>Rating:</p>
+        <p class="labels">Rating</p>
         <p>
             <span id="star1" class="stars">&starf;</span>
             <span id="star2" class="stars">&starf;</span>
@@ -29,10 +28,14 @@
             <span id="star4" class="stars">&starf;</span>
             <span id="star5" class="stars">&starf;</span>
         </p>
-        <p>Review:</p>
+        <br>
+        <p class="labels">Review</p>
         <p id="review"></p>
+        <br>
         <button id="edit">Edit</button>
-        <h3>Add to List</h3>
+    </div>
+    <div class="myRev">
+        <h2>Add to List</h2>
         <div>
             <select name="Lists"></select>
             <button id="add">Add</button>

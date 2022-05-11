@@ -5,7 +5,7 @@ html {
 }
 
 h1 {
-    color:purple;
+    color: white;
     font-family:fantasy;
     font-style: italic;
     font-weight: 100;
@@ -13,16 +13,18 @@ h1 {
     top: 1px;
 }
 #logInSignUpBox {
-    margin: auto;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
     width: 300px;
     padding: 10px;
-    border: 5px solid purple;
+    border: 5px solid rgb(99, 23, 99);
     background-color: rgb(205, 245, 243);
     text-align: center;
     grid-column: 1 / 3;
 }
 h2 {
-    color: purple;
+    color: rgb(99, 23, 99);
     font-family:fantasy;
     font-style: italic;
     text-align: center;
@@ -30,17 +32,21 @@ h2 {
 }
 
 h3 {
-    color: purple;
+    color: white;
     font-family:fantasy;
     font-style: italic;
     font-weight: 100;
     text-align: center;
 }
 
-.blue {
-    background:rgb(205, 245, 243);
+h4 {
+    color:rgb(99, 23, 99);
+    font-family: fantasy;
+    font-style: italic;
+    font-weight: 100;
 }
 
+/*
 #basicLayout {
     display: grid;
     grid-template-columns: auto 250px;
@@ -51,29 +57,31 @@ h3 {
     grid-column: 1 / 3;
     text-align: center;
 }
-
+*/
+/*
 #basicLayout > div{
-    text-align: center;
-    border-bottom: 5px solid purple
-}
-
-#homeLayout {
-    display: grid;
-    grid-template-columns: 350px auto 250px;
-    grid-template-rows: 60px 525px;   
-}
-
-#homeLayout > div {
     text-align: center;
     border-bottom: 5px solid purple;
 }
-
+*/
+#homeLayout {
+    display: grid;
+    grid-template-columns: 350px auto 250px 0px;
+    grid-template-rows: 60px 545px;   
+    margin: 0px;
+}
+/*
+#homeLayout > div {
+    text-align: center;
+    border-top: 5px solid purple;
+}
+*/
 #profile {
     display: grid;
     grid-template-columns: 150px auto;
     padding: 30px;
-    border-left: 5px solid purple;
-    border-right: 5px solid purple;
+    border-left: 5px solid rgb(99, 23, 99);
+    border-right: 5px solid rgb(99, 23, 99);
 }
 /*
 #profile > div {
@@ -107,74 +115,86 @@ h3 {
     grid-template-columns: 1fr;
     grid-template-rows: 100px auto 100px;
     padding: 30px;
-    border-left: 5px solid purple;
-    border-right: 5px solid purple;
+    border-left: 5px solid rgb(99, 23, 99);
+    border-right: 5px solid rgb(99, 23, 99);
+    margin: 0px;
 }
 
 #popUp {
     display: none;
     position:fixed;
     top:50%;
-    left:50%;
+    left:54%;
     transform: translate(-50%, -50%);
     width: 250px;
-    height: 75px;
-    padding-top: 50px;
+    height: 90px;
     padding-bottom: 35px;
-    border: 5px solid purple;
+    border: 5px solid rgb(99, 23, 99);
     background-color: white;
 }
 
 button {
-    color: purple;
-    font-family: fantasy;
+    color: white;
+    font-weight: bold;
     font-size: medium;
-    background-color: rgb(205, 245, 243);
-    border-radius: 4px;
-    border: groove rgb(117, 186, 181);
-    padding: 2px;
+    background-color: rgb(99, 23, 99);
+    border-radius: 6px;
+    border: none;
+    padding: 4px;
+    margin: 4px;
     cursor: pointer;
 }
 
 select {
-    color: purple;
+    color:rgb(99, 23, 99);
     font-size: medium;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-weight: 800;
-    border: solid rgb(235, 177, 235);
-}
-
-#signUpButton {
-    color: purple;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: medium;
-    background-color: white;
-    border: solid purple;
-}
-
-#logInButton {
-    color: purple;
-    font-family: fantasy;
-    font-size: medium;
-    background-color: white;
-    border: solid purple;
+    font-weight: bold;
+    border:solid black;
 }
 
 #showLayout {
     display: grid;
-    grid-template-columns: 350px 150px auto;
+    grid-template-columns: 350px 200px auto 300px;
     grid-template-rows: 60px 525px;  
+    margin: 0px;
 }
 
-#showLayout > div {
-    border-top: 5px solid purple;
+#showLayout > div, #homeLayout > div, #basicLayout > div {
     text-align: center;
 }
 
+#basicLayout {
+    grid-template-rows: 60px 525px;
+    margin: 0px;
+}
+
 #friendRev {
-    border-right: 5px solid purple;
+    border-right: 8px solid rgb(99, 23, 99);
 }
 
 .myRev {
     padding: 20px;
+    
+}
+
+.header {
+    grid-column: 1 / 5;
+    display: grid;
+    grid-template-columns: 350px auto 150px 100px;
+    background-color: rgb(99, 23, 99);
+    padding: 3px;
+}
+
+.labels {
+    text-decoration: underline;
+}
+
+#review {
+    color: rgb(109, 7, 109);
+}
+
+li {
+    font-size: 14pt;
+    font-weight: bold;
 }

@@ -7,10 +7,13 @@
 </head>
 
 <body id="homeLayout">
-    <div class="blue"><h1>TVrater</h1></div>
-    <div class="blue"><h3 id="toSearch">Search</h3></div>
-    <div class="blue"><a href="./logIn.html"><h3>Log Out</h3></a></div>
-    <div >
+    <div class="header">
+        <div><h1>TVrater</h1></div>
+        <div><h3 id="toSearch">Search</h3></div>
+        <div><h3 id="user"></h3></div>
+        <div><a href="./logIn.html"><h3>Log Out</h3></a></div>
+    </div>
+    <div>
         <h2>Friends</h2>
         <input type="text" id="search" placeholder="Search For New Friends">
         <button id="searchButton">Search</button>
@@ -18,8 +21,7 @@
     </div>
     <div id="listLayout">
         <div id="listHeader">
-            <h2 id="listName">List Name</h2>
-            <p>Bio</p>
+            <h2 id="listName"></h2>
         </div>
         <div id="showList">
             <div id="popUp">
@@ -35,7 +37,7 @@
         </div>
     </div>
     <div id="lists">
-        <h2>Lists</h2>
+        <h2 id="listsTitle">Lists</h2>
         <ul></ul>
     </div>
     <script src="list.js"></script>  
