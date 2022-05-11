@@ -56,7 +56,7 @@ function printLists(username) {
         lst.addEventListener("click", ()=> {
             // Go to list page when list name is clicked on.
             let params = new URLSearchParams(window.location.search);
-            params.append("list", lst.innerHTML);
+            params.set("list", lst.innerHTML);
             document.location.href = "./list.html?" + params.toString();
             window.open(url);
         })
@@ -120,7 +120,8 @@ function setUpPage() {
 
 /* This function adds a new list to local storage based on user input */
 function addNewList() {
-    let params = new URLSearchParams(window.location.search), username = params.get("username");
+    let params = new URLSearchParams(window.location.search);
+    let username = params.get("username");
     let createName = document.createElement("input");
     createName.type = "text";
     document.querySelector("#addList").innerHTML = "Save";
