@@ -13,11 +13,25 @@ window.addEventListener("DOMContentLoaded", function () {
     printFriends();
 });
 
-function setUpPage() {
-    let params = new URLSearchParams(window.location.search),username = params.get("username")
-    , lName = params.get("list");
-    let account = JSON.parse(localStorage.getItem(username));
+function refresh() {
+    let params = new URLSearchParams(window.location.search);
+    document.location.href = "./list.html?"+ params.toString();
+    window.open(url);
+}
 
+function printLists(username, lName) {
+    let account = JSON.parse(localStorage.getItem(username));
+    for(item in account.lists) {
+        let lst = document.createElement("li");
+        lst.innerHTML = item;
+        lst.addEventListener("click", ()=> {
+            let params = new URLSearchParams(window.location.search);
+            params.set("list", lst.innerHTML);
+            document.location.href = "./list.html?" + params.toString();
+            window.open(url);
+        })
+        document.querySelector("ul").appendChild(lst);
+    }
     if(account.lists.hasOwnProperty(lName) && account.lists[lName]!=[]) {
         for (show of account.lists[lName]) {
             let image = document.createElement("img");
@@ -25,26 +39,22 @@ function setUpPage() {
             image.height = 150;
             let tvID = show.id;
             image.addEventListener("click", ()=> {
-                console.log(tvID);
                 options(username, lName, tvID);
             });
             document.querySelector("#showList").appendChild(image);
         }
     }
+}
 
-    for(item in account.lists) {
-        let lst = document.createElement("li");
-        lst.innerHTML = item;
-        lst.addEventListener("click", ()=> {
-            params.set("list", lst.innerHTML);
-            document.location.href = "./list.html?" + params.toString();
-            window.open(url);
-        })
-        document.querySelector("ul").appendChild(lst);
-    }
+function setUpPage() {
+    let params = new URLSearchParams(window.location.search)
+    let username = params.get("username");
+    let lName = params.get("list");
+
     if(params.get("friend")){
-        document.querySelector("#listName").innerHTML = params.get("friend")+"'s List: "+lName;
-        document.querySelector("#listsTitle").innerHTML = params.get("friend")+"'s Lists";
+        username = params.get("friend");
+        document.querySelector("#listName").innerHTML = username+"'s List: "+lName;
+        document.querySelector("#listsTitle").innerHTML = username+"'s Lists";
     } else {
         document.querySelector("#listName").innerHTML = lName;
 
@@ -66,6 +76,7 @@ function setUpPage() {
         deleteL.addEventListener("click", deleteList);
         document.querySelector("#edit").appendChild(deleteL);
     }
+    printLists(username, lName);
 }
 
 function addNewList() {
@@ -112,62 +123,63 @@ function search() {
     searchButton.innerHTML = "Search";
     searchButton.addEventListener("click", searchHandler);
     document.querySelector("#showList").innerHTML = "";
-    document.querySelector("#showList").appendChild(searchBar);
-    document.querySelector("#showList").appendChild(searchButton);
+    document.querySelector("#searchBar").appendChild(searchBar);
+    document.querySelector("#searchBar").appendChild(searchButton);
+
+    document.querySelector("#edit").innerHTML = "";
+    let cancel = document.createElement("button");
+    cancel.innerHTML = "Cancel";
+    cancel.addEventListener("click", refresh);
+    document.querySelector("#edit").appendChild(cancel);
 }
 
 async function searchHandler() {
     let search = document.querySelector("#searchShow").value;
     document.querySelector("#showList").innerHTML = "";
     let showList = await fetchImages(search);
-    addImages(showList);
+    showList.forEach(addImages);
 }
 
-async function fetchImages(topic) {
-    let params = new URLSearchParams(window.location.search),username = params.get("username")
-    ,lName = params.get("list");
+ async function fetchImages(topic) {
     let url = "https://api.tvmaze.com/search/shows?q=" + topic;
     let response = await fetch(url);
- 
-    let showList = [];
-
+    let showList = new Map();
     if (response.ok) {
       let r = await response.json();
         for (let c of r) {
             if(c.show.image != null){
-                let account = JSON.parse(localStorage.getItem(username));
-                let tvID = c.show.id;
-                let alreadyIn = false;
-                for(i in account["lists"][lName]){
-                    if(account["lists"][lName][i].id == tvID){
-                        alreadyIn = true;
-                    }
-                }
-                if(alreadyIn == false){
-                    let newImage = document.createElement("img");
-                    newImage.src = c.show.image.medium;
-                    newImage.height = 150;
-                    newImage.addEventListener("click", function addToList() {
-                        let addShow = {id: tvID, showImg: newImage.src};
-                        account["lists"][lName].push(addShow);
-                        localStorage.setItem(username,JSON.stringify(account));
-    
-                        newImage.style = "filter: blur(8px);";
-                        newImage.removeEventListener("click", addToList);
-                    });
-                    showList.push(newImage);
-                }
+                showList.set(c.show.id, c.show.image.medium);
             }
         }
-    }
-    
+    } 
     return showList;
  }
 
+function addImages(image, id) {
+    let params = new URLSearchParams(window.location.search);
+    let username = params.get("username");
+    let lName = params.get("list");
+    let account = JSON.parse(localStorage.getItem(username));
+        let alreadyIn = false;
+        for(i in account["lists"][lName]){
+            if(account["lists"][lName][i].id == id){
+                alreadyIn = true;
+            }
+        }
+        if(!alreadyIn){
+            let newImage = document.createElement("img");
+            newImage.src = image;
+            newImage.height = 150;
+            newImage.addEventListener("click", function addToList() {
+                let account = JSON.parse(localStorage.getItem(username));
+                let addShow = {id: id, showImg: image};
+                account["lists"][lName].push(addShow);
+                localStorage.setItem(username,JSON.stringify(account));
 
- function addImages(array) {
-    for (image of array) {
-        document.querySelector("#showList").appendChild(image);
+                newImage.style = "filter: blur(8px);";
+                newImage.removeEventListener("click", addToList);
+        });
+        document.querySelector("#showList").appendChild(newImage);
     }
 }
 
@@ -189,10 +201,12 @@ function options(username, lName, tvID) {
         }
         account.lists[lName].splice(d,1);
         localStorage.setItem(username,JSON.stringify(account));
+        refresh();
     });
 
     document.querySelector("#toShowPage").addEventListener("click", ()=> {
         let params = new URLSearchParams(window.location.search);
+        params.delete("list");
         params.append("tvID",tvID);
         document.location.href = "./tvShow.html?"+ params.toString();
         window.open(url);

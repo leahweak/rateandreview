@@ -1,21 +1,39 @@
 window.addEventListener("DOMContentLoaded", function () {
-    let params = new URLSearchParams(window.location.search), username = params.get("username");
-    document.querySelector("#user").innerHTML = username;
-    setUpPage();
+    prepareProfile();
     document.querySelector("#toSearch").addEventListener("click", goToSearch);
-    document.querySelector("h1").addEventListener("click", () => {
-        let p = new URLSearchParams();
-        p.append("username",username);
-        document.location.href = "./home.html?"+ p.toString();
-        window.open(url);
-    });
+    document.querySelector("h1").addEventListener("click",refresh);
     document.querySelector("#searchButton").addEventListener("click",friendSearch);
     printFriends();
 });
 
-function setUpPage() {
+function refresh() {
     let params = new URLSearchParams(window.location.search);
     let username = params.get("username");
+    let p = new URLSearchParams();
+    p.append("username",username);
+    document.location.href = "./home.html?"+ p.toString();
+    window.open(url);
+}
+
+function printLists(username) {
+    let account = JSON.parse(localStorage.getItem(username));
+    for(item in account.lists) {
+        let lst = document.createElement("li");
+        lst.innerHTML = item;
+        lst.addEventListener("click", ()=> {
+            let params = new URLSearchParams(window.location.search);
+            params.append("list", lst.innerHTML);
+            document.location.href = "./list.html?" + params.toString();
+            window.open(url);
+        })
+        document.querySelector("ul").appendChild(lst);
+    }
+}
+
+function prepareProfile() {
+    let params = new URLSearchParams(window.location.search);
+    let username = params.get("username");
+    document.querySelector("#user").innerHTML = username;
     if(params.get("friend")){
         let addRemove = document.createElement("button");
         let account = JSON.parse(localStorage.getItem(username));
@@ -49,17 +67,7 @@ function setUpPage() {
     }
 
     document.querySelector("#profileImg").src = account.img;
-
-    for(item in account.lists) {
-        let lst = document.createElement("li");
-        lst.innerHTML = item;
-        lst.addEventListener("click", ()=> {
-            params.append("list", lst.innerHTML);
-            document.location.href = "./list.html?" + params.toString();
-            window.open(url);
-        })
-        document.querySelector("ul").appendChild(lst);
-    }
+    printLists(username);
 }
 
 function addNewList() {
@@ -71,8 +79,7 @@ function addNewList() {
         let account = JSON.parse(localStorage.getItem(username));
         account.lists[createName.value] = [];
         localStorage.setItem(username,JSON.stringify(account));
-        document.location.href = "./home.html?" + params.toString();
-        window.open(url);
+        refresh();
     });
     document.querySelector("ul").appendChild(createName);
 }
@@ -89,8 +96,7 @@ function editProfile() {
     let exit = document.createElement("button");
     exit.innerHTML = "Don't Save";
     exit.addEventListener("click", () => {
-        document.location.href = "./home.html?"+ params.toString();
-        window.open(url);
+        refresh();
     });
     document.querySelector("#options").appendChild(exit);
 
@@ -104,8 +110,7 @@ function editProfile() {
         account.bio = newBio.value;
         account.img = document.querySelector("#profileImg").src;
         localStorage.setItem(username,JSON.stringify(account));
-        document.location.href = "./home.html?"+ params.toString();
-        window.open(url);
+        refresh();
     });
 }
 
@@ -142,13 +147,6 @@ function changePic() {
     document.querySelector("#upload").appendChild(upload);
 }
 
-function goToList() {
-    let params = new URLSearchParams(window.location.search);
-    params.append("list","Want to Watch");
-    document.location.href = "./list.html?"+ params.toString();
-    window.open(url);
-}
-
 function friendSearch() {
     document.querySelector("#friendAct").innerHTML = "";
     let query = document.querySelector("#search").value;
@@ -157,30 +155,13 @@ function friendSearch() {
     for(let i=0; i<localStorage.length; i++) {
         let user = localStorage.key(i);
         if(user != username && user.includes(query)) {
-            let account = JSON.parse(localStorage.getItem(user));
-            let info = document.createElement("div");
-            info.style = "display: grid; grid-template-columns: 80px auto; margin-left: 45px; margin-top: 25px";
-            let photo = document.createElement("img");
-            photo.src = account.img;
-            photo.width = "60";
-            photo.height = "60";
-            photo.addEventListener("click", ()=> {goToFriend(user)});
-            info.appendChild(document.createElement("div").appendChild(photo));
-            let nameDiv = document.createElement("div");
-            let name = document.createElement("h4");
-            name.innerHTML = user;
-            name.style = "text-align: left;";
-            name.addEventListener("click", ()=> {goToFriend(user)});
-            nameDiv.appendChild(name);
-            info.appendChild(nameDiv);
-            document.querySelector("#friendAct").appendChild(info);
+            printProfiles(user);
         }
     }
     let cancel = document.createElement("button");
     cancel.innerHTML = "Cancel";
     cancel.addEventListener("click", () => {
-        document.location.href = "./home.html?"+ params.toString();
-        window.open(url);
+        refresh();
     });
     document.querySelector("#friendAct").appendChild(cancel);
 
@@ -217,22 +198,26 @@ function printFriends() {
 
     for(i in account.friends) {
             let user = account.friends[i];
-            let friendAccount = JSON.parse(localStorage.getItem(user));
-            let info = document.createElement("div");
-            info.style = "display: grid; grid-template-columns: 80px auto; margin-left: 45px; margin-top: 25px";
-            let photo = document.createElement("img");
-            photo.src = friendAccount.img;
-            photo.width = "60";
-            photo.height = "60";
-            photo.addEventListener("click", ()=> {goToFriend(user)});
-            info.appendChild(document.createElement("div").appendChild(photo));
-            let nameDiv = document.createElement("div");
-            let name = document.createElement("h4");
-            name.innerHTML = user;
-            name.style = "text-align: left;";
-            name.addEventListener("click", ()=> {goToFriend(user)});
-            nameDiv.appendChild(name);
-            info.appendChild(nameDiv);
-            document.querySelector("#friendAct").appendChild(info);
+            printProfiles(user);
     }
+}
+
+function printProfiles(user) {
+        let friendAccount = JSON.parse(localStorage.getItem(user));
+        let info = document.createElement("div");
+        info.style = "display: grid; grid-template-columns: 80px auto; margin-left: 45px; margin-top: 25px";
+        let photo = document.createElement("img");
+        photo.src = friendAccount.img;
+        photo.width = "60";
+        photo.height = "60";
+        photo.addEventListener("click", ()=> {goToFriend(user)});
+        info.appendChild(document.createElement("div").appendChild(photo));
+        let nameDiv = document.createElement("div");
+        let name = document.createElement("h4");
+        name.innerHTML = user;
+        name.style = "text-align: left;";
+        name.addEventListener("click", ()=> {goToFriend(user)});
+        nameDiv.appendChild(name);
+        info.appendChild(nameDiv);
+        document.querySelector("#friendAct").appendChild(info);
 }
